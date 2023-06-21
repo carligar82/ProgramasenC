@@ -1,0 +1,1314 @@
+/**
+ * Práctica agenda
+ * Manual de instrucciones y fichero de configuración disponibles en LinkedIn o pedir en https://www.facebook.com/carlos.limeres.7
+ * @date 21-07-2017
+ * @author Carlos Limeres
+ * */
+#include <stdio.h>
+#include <string.h>
+#include <dir.h>
+#include <dos.h>
+#include <io.h>
+#include <conio.h>
+int disig (int vect[3],int dias)
+{
+ int i;
+ for (i=1;i<=dias;i++)
+ {
+  vect[0]=vect[0]+1;
+  if (vect[0]==29)
+  {
+   if (vect[1]==2)
+   {
+    if ((vect[2]%4!=0)||(vect[2]%100==0))
+    {
+     vect[0]=1;
+     vect[1]=3;
+    }
+   }
+  }
+  if (vect[0]==30)
+  {
+   if (vect[1]==2)
+   {
+    vect[0]=1;
+    vect[1]=3;
+   }
+  }
+  if (vect[0]==31)
+  {
+   if ((vect[1]==4)||(vect[1]==6)||(vect[1]==9)||(vect[1]==11))
+   {
+    vect[0]=1;
+    vect[1]=vect[1]+1;
+   }
+  }
+  if (vect[0]==32)
+  {
+   if (vect[1]==12)
+   {
+    vect[0]=1;
+    vect[1]=1;
+    vect[2]=vect[2]+1;
+   }
+   else
+   {
+    vect[0]=1;
+    vect[1]=vect[1]+1;
+   }
+  }
+ }
+ return vect[3];
+}
+int no (char b)
+{
+ int a;
+ if (b=='0')
+ {
+  a=0;
+ }
+ if (b=='1')
+ {
+  a=1;
+ }
+ if (b=='2')
+ {
+  a=2;
+ }
+ if (b=='3')
+ {
+  a=3;
+ }
+ if (b=='4')
+ {
+  a=4;
+ }
+ if (b=='5')
+ {
+  a=5;
+ }
+ if (b=='6')
+ {
+  a=6;
+ }
+ if (b=='7')
+ {
+  a=7;
+ }
+ if (b=='8')
+ {
+  a=8;
+ }
+ if (b=='9')
+ {
+  a=9;
+ }
+ return a;
+}
+int esta (char a[80],char b[80])
+{
+ int x=1;
+ char *ptr;
+ ptr = strstr(a, b);
+ if (ptr==NULL)
+ {
+  x=0;
+ }
+ return x;
+}
+int fichas (void)
+{
+ FILE *f1;
+ char ficha[77];
+ int i=0;
+ f1=fopen ("eventos","rb");
+ do
+ {
+  fgets (ficha,78,f1);
+  if (feof(f1)==0)
+  {
+   i++;
+  }
+ }
+ while (feof (f1)==0);
+ fclose (f1);
+ return i;
+}
+int dir2 (char r[80],char r2 [80])
+{
+ struct ffblk ffblk;
+ int done,b=0;
+ strcat (r,":*");
+ done = findfirst(r,&ffblk,0);
+ while (!done)
+ {
+  if (strcmp (ffblk.ff_name,r2)==0)
+  {
+   b=1;
+  }
+  done = findnext(&ffblk);
+ }
+ return b;
+}
+int dir (char r[80])
+{
+ struct ffblk ffblk;
+ int done,b=0;
+ done = findfirst(r,&ffblk,0);
+ while (!done)
+ {
+  if (strcmp (ffblk.ff_name,r)==0)
+  {
+   b=1;
+  }
+  done = findnext(&ffblk);
+ }
+ return b;
+}
+int letra (char a)
+{
+ int f=1;
+ char d='A';
+ while (d!=a)
+ {
+  d++;
+  f++;
+ }
+ return f;
+}
+char cor (char c)
+{
+ char x='A';
+ int a,b,d,i;
+ int mat1[96]={65,77,79,80,81,82,93,96,60,109,178,64,66,67,68,69,70,71,72,73,74,75,76,78,83,84,85,86,87,88,89,90,91,92,94,95,97,98,99,100,101,104,105,106,107,108,110,111,117,118,119,120,125,126,134,135,143,144,145,146,147,148,150,151,152,157,158,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,179,180,181,182,183,184,185,186,187,188,189};
+ int mat2[96]={188,172,133,137,166,134,152,161,102,97,153,135,169,162,164,160,165,167,170,171,168,175,174,132,180,182,178,187,185,191,150,156,184,99,151,67,173,179,186,177,145,127,110,108,125,124,107,123,129,130,128,105,98,101,163,131,100,176,144,138,139,136,141,142,143,102,140,147,159,148,146,181,149,117,190,158,154,155,153,189,95,111,116,86,113,126,118,103,183,120,122,104,85,121,115,114};
+ a=letra (c);
+ b=a;
+ for (i=0;i<=95;i++)
+ {
+  if (a==mat1[i])
+  {
+   b=mat2[i];
+  }
+ }
+ for (d=2;d<=b;d++)
+ {
+  x++;
+ }
+ return x;
+}
+int carac (char e)
+{
+ int c=1;
+ int d;
+ d=letra(e);
+ if ((d==63)||(d==102)||(d==103)||(d==178)||(d==149)||(d==159)||(d==178))
+ {
+  c=0;
+ }
+ if ((d>111)&&(d<117))
+ {
+  c=0;
+ }
+ if ((d>120)&&(d<125))
+ {
+  c=0;
+ }
+ if ((d>126)&&(d<134))
+ {
+  c=0;
+ }
+ if ((d>135)&&(d<143))
+ {
+  c=0;
+ }
+ if ((d>152)&&(d<157))
+ {
+  c=0;
+ }
+ if ((d>189)&&(d<224))
+ {
+  c=0;
+ }
+ return c;
+}
+void carlos (int e)
+{
+ char C='A';
+ int n=1;
+ int d=155;
+ int x;
+ while (n!=d)
+ {
+  n=n+1;
+  C=C+1;
+ }
+ for (x=1;x<=e;x++)
+ {
+  printf ("%c",C);
+ }
+ printf ("\n");
+}
+void copias (void)
+{
+ FILE *f1,*f2;
+ char ficha[77];
+ char o[80],n[80];
+ int a;
+ do
+ {
+  printf ("Destino copia seguridad : ");
+  fflush (stdin);
+  gets (o);
+ }
+ while (esta(o,":")==1);
+ if ((strcmp(o,"")==0)||(strcmp(o," ")==0))
+ {
+  puts ("Copia de seguridad cancelada.");
+ }
+ else
+ {
+  strcpy (n,o);
+  a=1;
+  if (dir2(o,"EVENTOS")==1)
+  {
+   printf ("Fichero 'eventos' existente en unidad %s.\n",n);
+   printf ("Sobreescribir ? ");
+   scanf ("%d",&a);
+  }
+  if (a==0)
+  {
+   printf ("Fichero 'eventos' existente en %s\nCopia de seguridad cancelada.\a\n",n);
+  }
+  else
+  {
+   strcat (n,":eventos");
+   f1=fopen ("eventos","rb");
+   f2=fopen (n,"wb");
+   do
+   {
+    fread (&ficha,77,1,f1);
+    if (feof(f1)==0)
+    {
+     fwrite (&ficha,77,1,f2);
+    }
+   }
+   while (feof(f1)==0);
+   fclose (f1);
+   fclose (f2);
+   printf ("Copia realizada.\n");
+  }
+ }
+ delay (6000);
+ clrscr ();
+} 
+void copia (char f[80],char i[80])
+{
+ FILE *f1,*f2;
+ char fich;
+ f1=fopen (i,"rb");
+ f2=fopen (f,"wb");
+ do
+ {
+  fread (&fich,1,1,f1);
+  if (feof(f1)==0)
+  {
+   fwrite (&fich,1,1,f2);
+  }
+ }
+ while (feof(f1)==0);
+ fclose (f1);
+ fclose (f2);
+ delay (6000);
+} 
+void meter (void)
+{
+ int i,j,a=1;
+ char autor[11],titulo[6],numero[61],u;
+ char x[11],y[11],titulo2[6];
+ FILE *f1;
+ u=' ';
+ do
+ {
+  clrscr ();
+  f1=fopen ("eventos","ab");
+  do
+  {
+   printf ("                   ");
+   carlos (10);
+   printf ("Fecha (dd/mm/aaaa):");
+   fflush (stdin);
+   gets (y);
+   puts ("Pulse INTRO para mantener la fecha.");
+   printf ("                   ");
+   carlos (10);
+   printf ("Fecha (dd/mm/aaaa):");
+   fflush (stdin);
+   gets (x);
+   if (strcmp(x,"")==0)
+   {
+    strcpy (x,y);
+   }
+   j=strlen (x);
+  }
+  while ((j!=10)||(x[2]!='/')||(x[5]!='/'));
+  autor[0]=x[6];
+  autor[1]=x[7];
+  autor[2]=x[8];
+  autor[3]=x[9];
+  autor[4]='/';
+  autor[5]=x[3];
+  autor[6]=x[4];
+  autor[7]='/';
+  autor[8]=x[0];
+  autor[9]=x[1];
+  fwrite (autor,10,1,f1);
+  fwrite (&u,1,1,f1);
+  do
+  {
+   printf ("             ");
+   carlos (5);
+   printf ("Hora (hh:mm):");
+   fflush (stdin);
+   gets (titulo2);
+   puts ("Pulse INTRO para mantener la hora.");
+   printf ("             ");
+   carlos (5);
+   printf ("Hora (hh:mm):");
+   fflush (stdin);
+   gets (titulo);
+   if (strcmp(titulo,"")==0)
+   {
+    strcpy (titulo,titulo2);
+   }
+   j=strlen (titulo);
+  }
+  while ((j!=5)||(titulo[2]!=':'));
+  fwrite (titulo,5,1,f1);
+  fwrite (&u,1,1,f1);
+  do
+  {
+   printf ("       ");
+   carlos (60);
+   printf ("Evento:");
+   fflush (stdin);
+   gets (numero);
+   j=strlen (numero);
+   for (i=0;i<=j-1;i++)
+   {
+    if (carac(numero[i])==0)
+    {
+     j=61;
+    }
+   }
+  }
+  while (j>60);
+  fwrite (numero,j,1,f1);
+  for (i=j+1;i<=60;i++)
+  {
+   fwrite (&u,1,1,f1);
+  }
+  fclose (f1);
+  sound (4000);
+  delay (500);
+  sound (400);
+  delay (500);
+  nosound ();
+  printf ("M s eventos ? ");
+  scanf ("%d",&a);
+ }
+ while (a!=0);
+ a=fichas ();
+ if (a!=0)
+ {
+  puts ("Realizando copia de seguridad...");
+  copias();
+ }
+ else
+ {
+  remove ("eventos");
+ }
+ printf ("Fichero cerrado.\n");
+ delay (3000);
+ clrscr ();
+}
+void orden (int a)
+{
+ FILE *f1,*f2,*f3;
+ char min[80],max[80];
+ int b,n;
+ if (a!=1)
+ {
+  for (n=1;n<=a;n++)
+  {
+   f3=fopen ("casas.o","ab");
+   f1=fopen ("eventos","rb");
+   fgets (min,78,f1);
+   for (b=n;b<=a-1;b++)
+   {
+    fgets (max,78,f1);
+    if (strcmp (min,max)>0)
+    {
+     strcpy (min,max);
+    }
+   }
+   fputs (min,f3);
+   fclose (f1);
+   fclose (f3);
+   f1=fopen ("eventos","rb");
+   f2=fopen ("casos.a","wb");
+   for (b=n;b<=a;b++)
+   {
+    fgets (max,78,f1);
+    if (strcmp(max,min)!=0)
+    {
+     fputs (max,f2);
+    }
+   }
+   fclose (f1);
+   fclose (f2);
+   f1=fopen ("eventos","wb");
+   f2=fopen ("casos.a","rb");
+   for (b=n;b<=a-1;b++)
+   {
+    fgets (max,78,f2);
+    fputs (max,f1);
+   }
+   fclose (f1);
+   fclose (f2);
+  }
+  f1=fopen ("casas.o","ab");
+  f2=fopen ("casos.a","rb");
+  fgets (max,78,f2);
+  fputs (max,f1);
+  fclose (f1);
+  fclose (f2);
+  f1=fopen ("eventos","wb");
+  f2=fopen ("casas.o","rb");
+  for (b=1;b<=a;b++)
+  {
+   fgets (max,78,f2);
+   fputs (max,f1);
+  }
+  fclose (f1);
+  fclose (f2);
+  remove ("casas.o");
+  remove ("casos.a");
+  delay (3000);
+ }
+}
+void mostrar (char r[80])
+{
+ FILE *f1;
+ char ficha[77],ficha2[77];
+ int i,j,k;
+ f1=fopen (r,"rb");
+ clrscr ();
+ printf ("Fecha      Hora  Evento\n");
+ i=1;
+ do
+ {
+  fgets (ficha,78,f1);
+  strcpy (ficha2,ficha);
+  ficha[6]=ficha2[0];
+  ficha[7]=ficha2[1];
+  ficha[8]=ficha2[2];
+  ficha[9]=ficha2[3];
+  ficha[5]='/';
+  ficha[3]=ficha2[5];
+  ficha[4]=ficha2[6];
+  ficha[2]='/';
+  ficha[0]=ficha2[8];
+  ficha[1]=ficha2[9];
+  if (feof(f1)==0)
+  {
+   printf ("%s\n",ficha);
+   i++;
+   if (i==24)
+   {
+    printf ("Pulsa una tecla para seguir.");
+    getch();
+    clrscr();
+    printf ("Fecha      Hora  Evento\n");
+    i=1;
+   }
+  }
+ }
+ while (feof (f1)==0);
+ getch ();
+ fclose (f1);
+ puts ("Pulsa una tecla para seguir.");
+ getch();
+ clrscr();
+}
+void imprimir (char r[80])
+{
+ FILE *f1,*f2;
+ char ficha[78],r2[80],ficha2[78];
+ int i,x,x2,j;
+ x=1;
+ x2=1;
+ fflush (stdin);
+ clrscr();
+ strcpy (r2,r);
+ strcat (r2,".wri");
+ if (dir(r2)!=0)
+ {
+  printf ("Fichero de escritura existente.\nSobreescribir ? ");
+  scanf ("%d",&i);
+ }
+ else
+ {
+  i=1;
+ }
+ if (i!=0)
+ {
+  f1=fopen (r,"rb");
+  f2=fopen (r2,"w");
+  fprintf (f2,"  Eventos %02d\n",x2);
+  fprintf (f2,"  Fecha      Hora  Evento\n");
+  i=2;
+  do
+  {
+   fgets (ficha,78,f1);
+   strcpy (ficha2,ficha);
+   ficha[6]=ficha2[0];
+   ficha[7]=ficha2[1];
+   ficha[8]=ficha2[2];
+   ficha[9]=ficha2[3];
+   ficha[5]='/';
+   ficha[3]=ficha2[5];
+   ficha[4]=ficha2[6];
+   ficha[2]='/';
+   ficha[0]=ficha2[8];
+   ficha[1]=ficha2[9];
+   if (feof(f1)==0)
+   {
+    fprintf (f2,"  ");
+    for (j=0;j<=76;j++)
+    {
+     fprintf (f2,"%c",cor(ficha[j]));
+    }
+    fprintf (f2,"\n");
+    x++;
+    i++;
+    if (i==60)
+    {
+     x2++;
+     fprintf (f2,"\n\n\n\n\n\n\n\n\n\n\n\n");
+     fprintf (f2,"  Eventos %02d\n",x2);
+     fprintf (f2,"  Fecha      Hora  Evento\n");
+     i=2;
+    }
+   }
+  }
+  while (feof(f1)==0);
+  clrscr();
+  fclose (f1);
+  fclose (f2);
+  printf ("Archivo '%s' impreso en fichero '%s'.\n",r,r2);
+  puts ("Listo para imprimir.");
+  delay (6000);
+  clrscr();
+ }
+}
+void buscar (int b)
+{
+ FILE *f1,*f2;
+ char r[80];
+ int a,c;
+ char autor[77],titulo[77];
+ clrscr ();
+ do
+ {
+  printf ("                   ");
+  c=1;
+  carlos (60);
+  printf ("Evento de b£squeda:");
+  fflush (stdin);
+  gets (autor);
+  for (a=0;a<=strlen (autor)-1;a++)
+  {
+   if (carac(autor[a])==0)
+   {
+    c=0;
+   }
+  }
+ }
+ while ((strlen (autor)>60)||(c==0));
+ f1=fopen ("eventos","rb");
+ f2=fopen ("busc","wb");
+ c=0;
+ for (a=1;a<=b;a++)
+ {
+  fgets (titulo,78,f1);
+  if (esta (titulo,autor)==1)
+  {
+   c++;
+   fputs (titulo,f2);
+  }
+ }
+ printf ("Hay %d registro",c);
+ if (c!=1)
+ {
+  printf ("s");
+ } 
+ printf (" coincidente");
+ if (c!=1)
+ {
+  printf ("s");
+ } 
+ printf (".\n");
+ fclose (f1);
+ fclose (f2);
+ delay (3000);
+ clrscr ();
+ if (c!=0)
+ {
+  mostrar ("busc");
+  clrscr ();
+  printf ("Imprimir resultados ? ");
+  scanf ("%d",&a);
+  if (a!=0)
+  {
+   imprimir ("busc");
+  }
+ }
+ remove ("busc");
+}
+void actu (int b)
+{
+ FILE *f1,*f2;
+ struct date d;
+ char ficha[78];
+ char casa='q';
+ int r,a,m,di,esc,x,bb=0;
+ getdate(&d);
+ if (dir ("e")==1)
+ {
+  printf ("Error.\nFichero 'e' existente.\n");
+ }
+ else
+ {
+  f1=fopen ("eventos","rb");
+  f2=fopen ("e","wb");
+  for (x=1;x<=b;x++)
+  {
+   fgets (ficha,78,f1);
+   fputs (ficha,f2);
+  }
+  fprintf (f2,"%d/%02d/%02d",d.da_year,d.da_mon,d.da_day);
+  for (x=1;x<=77;x++)
+  {
+   fwrite (&casa,1,1,f2);
+  }
+  fclose (f1);
+  fclose (f2);
+  copia ("eventos","e");
+  remove ("e");
+  b++;
+  orden (b);
+  f1=fopen ("eventos","rb");
+  f2=fopen ("e","wb");
+  for (x=1;x<=b;x++)
+  {
+   fgets (ficha,78,f1);
+   a=no(ficha[0])*1000+no(ficha[1])*100+no(ficha[2])*10+no(ficha[3]);
+   m=no(ficha[5])*10+no(ficha[6]);
+   di=no(ficha[8])*10+no(ficha[9]);
+   if ((a==d.da_year)&&(m==d.da_mon)&&(di==d.da_day))
+   {
+    esc=1;
+   }
+   if (esc==1)
+   {
+    bb++;
+    fputs (ficha,f2);
+   }
+  }
+  fclose (f1);
+  fclose (f2);
+  copia ("eventos","e");
+  remove ("e");
+  b=bb;
+  f1=fopen ("eventos","rb");
+  f2=fopen ("e","wb");
+  for (x=1;x<=b;x++)
+  {
+   fgets (ficha,78,f1);
+   if (ficha[10]!='q')
+   {
+    fputs (ficha,f2);
+   }
+  }
+  fclose (f1);
+  fclose (f2);
+  copia ("eventos","e");
+  remove ("e");
+  b--;
+  esc=0;
+  printf ("Borrar eventos de hoy (si los hubiera) ? ");
+  scanf ("%d",&r);
+  if (r!=0)
+  {
+   f1=fopen ("eventos","rb");
+   f2=fopen ("e","wb");
+   for (x=1;x<=b;x++)
+   {
+    fgets (ficha,78,f1);
+    a=no(ficha[0])*1000+no(ficha[1])*100+no(ficha[2])*10+no(ficha[3]);
+    m=no(ficha[5])*10+no(ficha[6]);
+    di=no(ficha[8])*10+no(ficha[9]);
+    if (esc==0)
+    {
+     if ((a==d.da_year)&&(m==d.da_mon)&&(di==d.da_day))
+     {
+      esc=0;
+     }
+     else
+     {
+      esc=1;
+     }
+    }
+    if (esc==1)
+    {
+     fputs (ficha,f2);
+    }
+   }
+   fclose (f1);
+   fclose (f2);
+   copia ("eventos","e");
+   remove ("e");
+  }
+ }
+}
+void f (int a)
+{
+ FILE *f1,*f2;
+ struct date d;
+ int b,c,e,f,g,h,i,j,vect[3],x;
+ char fich[78];
+ b=fichas ();
+ if (dir ("e")==1)
+ {
+  printf ("Error.\n");
+ }
+ else
+ {
+  c=1;
+  do
+  {
+   clrscr ();
+   puts ("Escoge opci¢n:");
+   printf ("1-Seleccionar d¡as.\n2-Seleccionar todo.\n");
+   scanf ("%d",&c);
+  }
+  while ((c!=1)&&(c!=2));
+  if (c==2)
+  {
+   if (a==2)
+   {
+    imprimir ("EVENTOS");
+   }
+   if (a==4)
+   {
+    mostrar ("EVENTOS");
+   }
+  }
+  if (c==1)
+  {
+   x=0;
+   getdate(&d);
+   vect[2]=d.da_year;
+   vect[0]=d.da_day;
+   vect[1]=d.da_mon;
+   printf ("Margen de d¡as: ");
+   scanf ("%d",&h);
+   printf ("Incluir eventos de hoy (si los hubiera) ? ");
+   scanf ("%d",&c);
+   f2=fopen ("e","wb");
+   if (c!=0)
+   {
+    f1=fopen ("eventos","rb");
+    for (i=1;i<=b;i++)
+    {
+     fgets (fich,78,f1);
+     e=no(fich[0])*1000+no(fich[1])*100+no(fich[2])*10+no(fich[3]);
+     f=no(fich[5])*10+no(fich[6]);
+     g=no(fich[8])*10+no(fich[9]);
+     if ((e==vect[2])&&(f==vect[1])&&(g==vect[0]))
+     {
+      fputs (fich,f2);
+      x++;
+     }
+    }
+    fclose (f1);
+   }
+   for (j=1;j<=h;j++)
+   {
+    f1=fopen ("eventos","rb");
+    vect[3]=disig (vect,1);
+    for (i=1;i<=b;i++)
+    {
+     fgets (fich,78,f1);
+     e=no(fich[0])*1000+no(fich[1])*100+no(fich[2])*10+no(fich[3]);
+     f=no(fich[5])*10+no(fich[6]);
+     g=no(fich[8])*10+no(fich[9]);
+     if ((e==vect[2])&&(f==vect[1])&&(g==vect[0]))
+     {
+      fputs (fich,f2);
+      x++;
+     }
+    }
+    fclose (f1);
+   }
+   fclose (f2);
+   if (x!=0)
+   {
+    clrscr ();
+    if (a==2)
+    {
+     imprimir ("e");
+    }
+    if (a==4)
+    {
+     mostrar ("e");
+    }
+   }
+   remove ("e");
+  }
+ }
+}
+void modeven (int b)
+{
+ FILE *f1,*f2;
+ int a,x,i,c,m;
+ char autor[11],autorb[11],cadena[60],cadenab[60],numero[60],uno[80],dos[80],autord[11],titulo2[6],titulo[6];
+ do
+ {
+  clrscr ();
+  printf ("                   ");
+  c=1;
+  carlos (60);
+  printf ("Evento de b£squeda:");
+  fflush (stdin);
+  gets (cadena);
+  for (a=0;a<=strlen (cadena)-1;a++)
+  {
+   if (carac(cadena[a])==0)
+   {
+    c=0;
+   }
+  }
+ }
+ while ((strlen (cadena)>60)||(c==0));
+ strcpy (dos,cadena);
+ f1=fopen ("eventos","rb");
+ f2=fopen ("eventos2","wb");
+ for (a=1;a<=b;a++)
+ {
+  clrscr();
+  fgets (autor,12,f1);
+  strcpy (autorb,autor);
+  autor[0]=autorb[8];
+  autor[1]=autorb[9];
+  autor[4]=autorb[6];
+  autor[3]=autorb[5];
+  autor[2]='/';
+  autor[8]=autorb[2];
+  autor[9]=autorb[3];
+  autor[5]='/';
+  autor[6]=autorb[0];
+  autor[7]=autorb[1];
+  autor[10]=' ';
+  fgets (titulo,7,f1);
+  fgets (cadenab,61,f1);
+  strcpy (uno,cadenab);
+  if (esta (uno,dos)==0)
+  {
+   fputs (autorb,f2);
+   fputs (titulo,f2);
+   fputs (cadenab,f2);
+  }
+  else
+  {
+   printf ("Fecha      Hora  Evento\n");
+   printf ("%s%s%s\n",autor,titulo,cadenab);
+   printf ("Eliminar ficha ? ");
+   fflush (stdin);
+   scanf ("%d",&x);
+   if (x==0)
+   {
+    printf ("Pulse INTRO para mantener valores.\n");
+    do
+    {
+     printf ("                   ");
+     carlos (10);
+     printf ("Fecha (dd/mm/aaaa):");
+     fflush (stdin);
+     gets (autord);
+     m=strlen(autord);
+    }
+    while (m>10);
+    if (strcmp(autord,"")==0)
+    {
+     strcpy (autor,autorb);
+    }
+    else
+    {
+     autor[0]=autord[6];
+     autor[1]=autord[7];
+     autor[2]=autord[8];
+     autor[3]=autord[9];
+     autor[4]='/';
+     autor[5]=autord[3];
+     autor[6]=autord[4];
+     autor[7]='/';
+     autor[8]=autord[0];
+     autor[9]=autord[1];
+     autor[10]=' ';
+    }
+    strcpy (titulo2,titulo);
+    do
+    {
+     printf ("             ");
+     carlos (5);
+     printf ("Hora (hh:mm):");
+     fflush (stdin);
+     gets (titulo);
+     m=strlen(titulo);
+    }
+    while (m>5);
+    if (strcmp(titulo,"")==0)
+    {
+     strcpy (titulo,titulo2);
+    }
+    else
+    {
+     strcat (titulo," ");
+    }
+    do
+    {
+     printf ("       ");
+     carlos (60);
+     printf ("Evento:");
+     fflush (stdin);
+     gets (numero);
+     m=strlen (numero);
+     for (i=0;i<=m-1;i++)
+     {
+      if (carac(numero[i])==0)
+      {
+       m=61;
+      }
+     }
+    }
+    while (m>60);
+    if (strcmp(numero,"")==0)
+    {
+     strcpy (numero,cadenab);
+    }
+    else
+    {
+     for (i=m+1;i<=60;i++)
+     {
+      strcat (numero," ");
+     }
+    }
+    fputs (autor,f2);
+    fputs (titulo,f2);
+    fputs (numero,f2);
+    sound (4000);
+    delay (500);
+    sound (400);
+    delay (500);
+    nosound ();
+   }
+  }
+ }
+ fclose (f1);
+ fclose (f2);
+ copia ("eventos","eventos2");
+ remove ("eventos2");
+ printf ("Modificaci¢n finalizada.\n");
+ delay (3000);
+ clrscr();
+}
+void actus (int b)
+{
+ FILE *f1,*f2;
+ struct date d;
+ char ficha[78],ficha2[78];
+ char casa='q';
+ int r,a,m,di,esc=0,x,bb=0,bbb=1;
+ getdate(&d);
+ if (dir ("e")==1)
+ {
+  printf ("Error.\nFichero 'e' existente.\n");
+ }
+ else
+ {
+  f1=fopen ("eventos","rb");
+  f2=fopen ("e","wb");
+  for (x=1;x<=b;x++)
+  {
+   fgets (ficha,78,f1);
+   fputs (ficha,f2);
+  }
+  fprintf (f2,"%d/%02d/%02d",d.da_year,d.da_mon,d.da_day);
+  for (x=1;x<=77;x++)
+  {
+   fwrite (&casa,1,1,f2);
+  }
+  fclose (f1);
+  fclose (f2);
+  copia ("eventos","e");
+  remove ("e");
+  b++;
+  orden (b);
+  f1=fopen ("eventos","rb");
+  f2=fopen ("e","wb");
+  for (x=1;x<=b;x++)
+  {
+   fgets (ficha,78,f1);
+   strcpy (ficha2,ficha);
+   ficha2[0]=ficha[8];
+   ficha2[1]=ficha[9];
+   ficha2[4]=ficha[6];
+   ficha2[3]=ficha[5];
+   ficha2[2]='/';
+   ficha2[8]=ficha[2];
+   ficha2[9]=ficha[3];
+   ficha2[5]='/';
+   ficha2[6]=ficha[0];
+   ficha2[7]=ficha[1];
+   ficha2[10]=' ';
+   a=no(ficha[0])*1000+no(ficha[1])*100+no(ficha[2])*10+no(ficha[3]);
+   m=no(ficha[5])*10+no(ficha[6]);
+   di=no(ficha[8])*10+no(ficha[9]);
+   if (esc==0)
+   {
+    if ((a==d.da_year)&&(m==d.da_mon)&&(di==d.da_day))
+    {
+     esc=1;
+    }
+    else
+    {
+     esc=0;
+    }
+   }
+   if (esc==0)
+   {
+    printf ("Fecha      Hora  Evento\n");
+    printf ("%s\n",ficha2);
+    printf ("Mantener ficha ? ");
+    fflush (stdin);
+    scanf ("%d",&bbb);
+    if (bbb!=0)
+    {
+     bb++;
+     fputs (ficha,f2);
+    }
+   }
+   else
+   {
+    bb++;
+    fputs (ficha,f2);
+   }
+  }
+  fclose (f1);
+  fclose (f2);
+  copia ("eventos","e");
+  remove ("e");
+  b=bb;
+  f1=fopen ("eventos","rb");
+  f2=fopen ("e","wb");
+  for (x=1;x<=b;x++)
+  {
+   fgets (ficha,78,f1);
+   if (ficha[10]!='q')
+   {
+    fputs (ficha,f2);
+   }
+  }
+  fclose (f1);
+  fclose (f2);
+  copia ("eventos","e");
+  remove ("e");
+  b--;
+  esc=0;
+  printf ("Borrar eventos de hoy (si los hubiera) ? ");
+  scanf ("%d",&r);
+  if (r!=0)
+  {
+   f1=fopen ("eventos","rb");
+   f2=fopen ("e","wb");
+   for (x=1;x<=b;x++)
+   {
+    fgets (ficha,78,f1);
+    strcpy (ficha2,ficha);
+    ficha2[0]=ficha[8];
+    ficha2[1]=ficha[9];
+    ficha2[4]=ficha[6];
+    ficha2[3]=ficha[5];
+    ficha2[2]='/';
+    ficha2[8]=ficha[2];
+    ficha2[9]=ficha[3];
+    ficha2[5]='/';
+    ficha2[6]=ficha[0];
+    ficha2[7]=ficha[1];
+    ficha2[10]=' ';
+    a=no(ficha[0])*1000+no(ficha[1])*100+no(ficha[2])*10+no(ficha[3]);
+    m=no(ficha[5])*10+no(ficha[6]);
+    di=no(ficha[8])*10+no(ficha[9]);
+    if ((a==d.da_year)&&(m==d.da_mon)&&(di==d.da_day))
+    {
+     esc=1;
+    }
+    else
+    {
+     esc=0;
+    }
+    if (esc==1)
+    {
+     printf ("Fecha      Hora  Evento\n");
+     printf ("%s\n",ficha2);
+     printf ("Mantener ficha ? ");
+     fflush (stdin);
+     scanf ("%d",&bbb);
+     if (bbb!=0)
+     {
+      fputs (ficha,f2);
+     }
+    }
+    else
+    {
+     fputs (ficha,f2);
+    }
+   }
+   fclose (f1);
+   fclose (f2);
+   copia ("eventos","e");
+   remove ("e");
+  }
+ }
+}
+void main (void)
+{
+ FILE *f1;
+ int a,b,d,x,e;
+ fflush (stdin);
+ b=dir ("CASAS.O");
+ d=dir ("CASOS.A");
+ x=dir ("BUSC");
+ a=dir ("EVENTOS");
+ if ((a!=0)||(b==1)||(d==1)||(x==1))
+ {
+  clrscr ();
+  printf ("Fichero de escritura,de orden o de b£squeda existentes en la carpeta de trabajo.\aDesea continuar ? ");
+  scanf ("%d",&a);
+  if (a==0)
+  {
+   puts ("Programa interrumpido.");
+   exit (1);
+  }
+  a=fichas ();
+ }
+ else
+ {
+  f1=fopen ("EVENTOS","w");
+  fclose (f1);
+ }
+ if (a>1)
+ {
+  orden (a);
+ }
+ if (a>=1)
+ {
+  printf ("Actualizar lista de eventos ? ");
+  fflush (stdin);
+  scanf ("%d",&e);
+  if (e!=0)
+  {
+   printf ("Actualizaci¢n selectiva ? ");
+   fflush (stdin);
+   scanf ("%d",&e);
+   printf ("Actualizando lista de eventos...\n");
+   if (e==0)
+   {
+    actu (a);
+   }
+   else
+   {
+    actus (a);
+   }
+  }
+ }
+ do
+ {
+  clrscr ();
+  a=fichas ();
+  if (a>1)
+  {
+   orden (a);
+  }
+  clrscr ();
+  b=a;
+  fflush (stdin);
+  printf ("0-Salir.\a\n"); 
+  printf ("1-Nuevo evento.\n"); 
+  printf ("2-Imprimir eventos.\n");
+  printf ("3-Copia de seguridad.\n"); 
+  printf ("4-Mostrar eventos.\n");
+  printf ("5-B£squeda de eventos.\n");
+  printf ("6-Modificar eventos.\n");
+  scanf ("%d",&a);
+  printf ("Comprobaci¢n de la opci¢n:\n");
+  scanf ("%d",&a);
+  clrscr();
+  if ((a==6)&&(b>=1))
+  {
+   modeven (b);
+  }    
+  if ((a==5)&&(b>=1))
+  {
+   buscar (b);
+  }
+  if (a==1)
+  {
+   meter ();
+  }
+  if ((a==3)&&(b>=1))
+  {
+   copias ();
+  }
+  if ((a==2)&&(b>=1))
+  {
+   f (a);
+  }
+  if ((a==4)&&(b>=1))
+  {
+   f (a);
+  }
+ }
+ while (a!=0);
+ clrscr();
+ for (a=1;a<=3;a++)
+ {
+  printf ("\n\n\n\n\n\n\n\n\n\n");
+  printf ("                              Siempre a tu servicio\r");
+  delay (3000);
+  clrscr();
+  delay (2000);
+ }
+ for (a=1;a<=24;a++)
+ {
+  printf ("\n");
+ }
+ printf ("                                                            Copyright:2011-2017");
+ delay (3000);
+}
+ 
+  
+  
+    

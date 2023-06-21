@@ -1,0 +1,1306 @@
+/**
+ * Práctico archivador de tu música
+ * Manual de instrucciones y fichero de configuración disponibles en LinkedIn o pedir en https://www.facebook.com/carlos.limeres.7
+ * @date 13-06-2021
+ * @author Carlos Limeres
+ * */
+#include <stdio.h>
+#include <string.h>
+#include <dir.h>
+#include <dos.h>
+#include <io.h>
+#include <conio.h>
+int ng (void)
+{
+ struct ffblk ffblk;
+ int done,z=0;
+ done = findfirst("*",&ffblk,0);
+ while (!done)
+ {
+  z++;
+  done = findnext(&ffblk);
+ }
+ return z;
+}
+void verif (void)
+{
+ int handle,done;
+ long x;
+ char a[]="NNEWYWCUvxqhtu";
+ char b[50];
+ int z;
+ handle = creatnew("\\DATE.TE", 0);
+ x=filelength(handle);
+ if ((x==0)&&(handle!=-1))
+ {
+  remove ("\\DATE.TE");
+ }
+ if (handle!=-1)
+ {
+  printf ("Clave de instalaci¢n:");
+  scanf ("%s",&b);
+  z=strcmp (a,b);
+  if (z==0)
+  {
+   done = creatnew("\\DATE.TE", 0);
+   close (done);
+  }
+  else
+  {
+   puts ("Programa bloqueado.");
+   delay (3000);
+   exit (1);
+  }
+ }
+ else
+ {
+  if (x>=1)
+  {
+   puts ("­Atenci¢n! Posible incompatibilidad con programa.");
+   printf ("Desea continuar? ");
+   scanf ("%d",&handle);
+   if (handle==0)
+   {
+    exit (1);
+   }
+   done = creatnew("\\DATE.TE", 0);
+   close (done);
+  }
+ }
+ clrscr();
+}
+float rest1 (char x[80],float b) 
+{
+ FILE *f1;
+ char f;
+ float a=0,d=0;
+ f1=fopen (x,"rb");
+ while (feof(f1)==0)
+ {
+  fread (&f,1,1,f1);
+  a++;
+  if ((a==b)&&(feof(f1)==0))
+  {
+   a=0;
+   d=d+1;
+  }
+ }
+ fclose (f1);
+ return d;
+}
+float rest (void) 
+{
+ struct ffblk ffblk;
+ int done;
+ float a=0;
+ done = findfirst("*",&ffblk,0);
+ while (!done)
+ {
+  a=a+ffblk.ff_fsize;
+  done = findnext(&ffblk);
+ }
+ a=a/73;
+ return a;
+}
+int dentro (char a[80],char b[80])
+{
+ int x=1;
+ char *ptr;
+ ptr = strstr(a, b);
+ if (ptr==NULL)
+ {
+  x=0;
+ }
+ return x;
+}
+int letra (char a)
+{
+ int f=1;
+ char d='A';
+ while (d!=a)
+ {
+  d++;
+  f++;
+ }
+ return f;
+}
+char cor (char c)
+{
+ char x='A';
+ int a,b,d,i;
+ int mat1[96]={65,77,79,80,81,82,93,96,60,109,178,64,66,67,68,69,70,71,72,73,74,75,76,78,83,84,85,86,87,88,89,90,91,92,94,95,97,98,99,100,101,104,105,106,107,108,110,111,117,118,119,120,125,126,134,135,143,144,145,146,147,148,150,151,152,157,158,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,179,180,181,182,183,184,185,186,187,188,189};
+ int mat2[96]={188,172,133,137,166,134,152,161,102,97,153,135,169,162,164,160,165,167,170,171,168,175,174,132,180,182,178,187,185,191,150,156,184,99,151,67,173,179,186,177,145,127,110,108,125,124,107,123,129,130,128,105,98,101,163,131,100,176,144,138,139,136,141,142,143,102,140,147,159,148,146,181,149,117,190,158,154,155,153,189,95,111,116,86,113,126,118,103,183,120,122,104,85,121,115,114};
+ a=letra (c);
+ b=a;
+ for (i=0;i<=95;i++)
+ {
+  if (a==mat1[i])
+  {
+   b=mat2[i];
+  }
+ }
+ for (d=2;d<=b;d++)
+ {
+  x++;
+ }
+ return x;
+}
+int carac (char e)
+{
+ int c=1;
+ int d;
+ d=letra(e);
+ if ((d==63)||(d==102)||(d==103)||(d==178)||(d==149)||(d==159)||(d==178))
+ {
+  c=0;
+ }
+ if ((d>111)&&(d<117))
+ {
+  c=0;
+ }
+ if ((d>120)&&(d<125))
+ {
+  c=0;
+ }
+ if ((d>126)&&(d<134))
+ {
+  c=0;
+ }
+ if ((d>135)&&(d<143))
+ {
+  c=0;
+ }
+ if ((d>152)&&(d<157))
+ {
+  c=0;
+ }
+ if ((d>189)&&(d<224))
+ {
+  c=0;
+ }
+ return c;
+}
+void carlos (int e)
+{
+ char C='A';
+ int n=1;
+ int d=155;
+ int x;
+ while (n!=d)
+ {
+  n=n+1;
+  C=C+1;
+ }
+ for (x=1;x<=e;x++)
+ {
+  printf ("%c",C);
+ }
+ printf ("\n");
+}
+int adm (char z[80])
+{
+ int k,j;
+ j=1;
+ if (strcmp(z,"")!=0)
+ {
+  for (k=0;k<=strlen(z)-1;k++)
+  {
+   if (carac(z[k])==0)
+   {
+    j=0;
+   }
+  }
+ }
+ return j;
+}
+void cop (char a[80],char b[80])
+{
+ char f;
+ FILE *f1,*f2;
+ f1=fopen (a,"rb");
+ f2=fopen (b,"wb");
+ do
+ {
+  fread (&f,1,1,f1);
+  if (feof(f1)==0)
+  {
+   fwrite (&f,1,1,f2);
+  }
+ }
+ while (feof(f1)==0);
+ fclose (f1);
+ fclose (f2);
+}
+void fichas (char r[80])
+{
+ FILE *f1,*f2,*f3;
+ char m[80],k[80],min[73],max[73];
+ float a,s,n;
+ strcpy (k,r);
+ strcat (k,".2");
+ strcpy (m,r);
+ strcat (m,".3");
+ a=rest1 (r,73);
+ f1=fopen (m,"wb");
+ f2=fopen (k,"rb");
+ for (n=1;n<=a;n++)
+ {
+  fgets (max,74,f2);
+  f3=fopen (r,"rb");
+  for (s=1;s<=a;s++)
+  {
+   fgets (min,74,f3);
+   if (strcmp (max,min)==0)
+   {
+    fputs (min,f1);
+    fwrite (&s,4,1,f1);
+   }
+  }
+  fclose (f3);
+ }
+ fclose (f1);
+ fclose (f2);
+ cop (m,k);
+ remove (m);
+ delay (2000);
+}
+void dir (void)
+{
+ struct ffblk ffblk;
+ int done,h;
+ done = findfirst("*",&ffblk,0);
+ while (!done)
+ {
+  printf("%s",ffblk.ff_name);
+  for (h=strlen(ffblk.ff_name)+1;h<=20;h++)
+  {
+   printf (" ");
+  }
+  done = findnext(&ffblk);
+ }
+ printf ("\n");
+}
+int esta (char e[80])
+{
+ struct ffblk ffblk;
+ int done,x=0;
+ done = findfirst("*",&ffblk,0);
+ while (!done)
+ {
+  if (strcmp(e,ffblk.ff_name)==0)
+  {
+   x=1;
+  }
+  done = findnext(&ffblk);
+ }
+ return x;
+}
+char meter2 (float TAM,float a,char genero[80],char campo[80],char autor[30],int lencamp,int len)
+{
+ char x[30];
+ int i;
+ do
+ {
+  clrscr();
+  if (TAM!=0)
+  {
+   printf ("Ficha n§%.0f:(queda",a+1);
+   if (a!=99998)
+   {
+    printf ("n");
+   }
+   printf (" %.0f ficha",TAM-a);
+   if (a!=99998)
+   {
+    printf ("s");
+   }
+   printf (")\n");
+   printf ("Archivo:%s\n",genero);
+  }
+  if (strcmp (campo,"N£mero")!=0)
+  {
+   puts ("Estado de bufer:");
+   printf ("%s:%s\n",campo,autor);
+   puts ("Pulse INTRO para mantener valor predeterminado.");
+  }
+  else
+  {
+   printf ("éltimo n£mero:%s\n",autor);
+  }
+  for (i=1;i<=lencamp;i++)
+  {
+   printf (" ");
+  }
+  carlos (len);
+  printf ("%s:",campo);
+  fflush (stdin);
+  gets (x);
+ }
+ while ((adm(x)==0)||(strlen(x)>len));
+ if (strcmp(x,"")!=0)
+ {
+  if (strcmp (campo,"N£mero")!=0)
+  {
+   strcpy (autor,x);
+   for (i=strlen(x)+1;i<=len+1;i++)
+   {
+    strcat (autor," ");
+   }
+  }
+  else
+  {
+   if (strlen(x)==5)
+   {
+    strcpy (autor,x);
+   }
+   else
+   {
+    strcpy (autor,"0");
+    for (i=2;i<=5-strlen(x);i++)
+    {
+     strcat (autor,"0");
+    }
+    strcat (autor,x);
+   }
+  }
+ }
+ else
+ {
+  if (strcmp (campo,"N£mero")==0)
+  {
+   strcpy (autor,"00000");
+  }
+ }
+ return autor[30];
+}
+void meter (float a)
+{
+ float TAM,i,j,k;
+ int c;
+ char autor[31],form[31],titulo[31],genero[80],numero[31];
+ char genero2[80];
+ FILE *f1;
+ TAM=99999;
+ strcpy (autor,"");
+ strcpy (titulo,"");
+ strcpy (form,"");
+ strcpy (genero,"");
+ strcpy (numero,"");
+ while (a<TAM)
+ {
+  clrscr ();
+  if (a==TAM-1)
+  {
+   printf ("éltima ficha!!!\n");
+   sound (40);
+   delay (500);
+   nosound();
+  }
+  puts ("Lista de archivos disponibles:");
+  dir ();
+  getch();
+  do
+  {
+   clrscr();
+   printf ("Archivo:%s\n",genero);
+   fflush (stdin);
+   printf ("Nuevo g‚nero:");
+   gets (genero2);
+  }
+  while (adm (genero2)==0);
+  if (strcmp(genero2,"")!=0)
+  {
+   strcpy (genero,genero2);
+  }
+  f1=fopen (genero,"ab");
+  autor[31]=meter2(TAM,a,genero,"Autor",autor,6,29);
+  fwrite (autor,strlen (autor),1,f1);
+  titulo[31]=meter2(TAM,a,genero,"T¡tulo",titulo,7,29);
+  fwrite (titulo,strlen (titulo),1,f1);
+  form[31]=meter2(TAM,a,genero,"Formato",form,8,7);
+  fwrite (form,strlen (form),1,f1);
+  numero[31]=meter2(TAM,a,genero,"N£mero",numero,7,5);
+  fwrite (numero,strlen(numero),1,f1);
+  fclose (f1);
+  sound (4000);
+  delay (500);
+  sound (400);
+  delay (500);
+  nosound();
+  a++;
+  fflush (stdin);
+  if (a!=TAM)
+  {
+   printf ("Espacio libre:%.0f ficha",TAM-a);
+   if (a!=99998)
+   {
+    printf ("s");
+   }
+   printf (".\n");
+   printf ("M s fichas? ");
+   fflush (stdin);
+   scanf ("%d",&c);
+  }
+  if (c==0)
+  {
+   a=TAM;
+  }
+ }
+}
+void info (float a)
+{
+ puts ("Nombre:M£sica2021.");
+ printf ("Fichas activas:");
+ printf ("%.0f.\n",a);
+ printf ("Tama¤o m ximo:99999 fichas.\n");
+ puts ("Copyright:2015-2021.");
+ getch ();
+ clrscr ();
+}
+void orden (char u[80])
+{
+ FILE *f1,*f2,*f3;
+ char min[73],max[73],med[73];
+ float a,n;
+ a=rest1 (u,73);
+ if (a!=1)
+ {
+  f3=fopen ("casas.o","wb");
+  for (n=1;n<=a;n++)
+  {
+   f1=fopen (u,"rb");
+   fgets (min,74,f1);
+   if (n!=a)
+   {
+    f2=fopen ("casos.a","wb");
+    do
+    {
+     fgets (max,74,f1);
+     if (feof(f1)==0)
+     {
+      if (strcmp (min,max)>0)
+      {
+       strcpy (med,min);
+       strcpy (min,max);
+       strcpy (max,med);
+      }
+      fputs (max,f2);
+     }
+    }
+    while (feof(f1)==0);
+    fclose (f2);
+   }
+   fputs (min,f3);
+   fclose (f1);
+   cop ("casos.a",u);
+  }
+  fclose (f3);
+  cop ("casas.o",u);
+  remove ("casas.o");
+  remove ("casos.a");
+ }
+}
+void ordena (char u[80])
+{
+ FILE *f1,*f2;
+ char min[68],nmin[5],m[80],g[80];
+ float a,n;
+ a=rest1 (u,73);
+ strcpy (m,u);
+ strcat (m,".4");
+ f1=fopen (m,"wb");
+ f2=fopen (u,"rb");
+ for (n=1;n<=a;n++)
+ {
+  fgets (min,69,f2);
+  fgets (nmin,6,f2);
+  fputs (nmin,f1);
+  fputs (min,f1);
+ }
+ fclose (f1);
+ fclose (f2);
+ orden (m);
+ strcpy (g,u);
+ strcat (g,".2");
+ f1=fopen (m,"rb");
+ f2=fopen (g,"wb");
+ for (n=1;n<=a;n++)
+ {
+  fgets (nmin,6,f1);
+  fgets (min,69,f1);
+  fputs (min,f2);
+  fputs (nmin,f2);
+ }
+ fclose (f1);
+ fclose (f2);
+ remove (m);
+}
+void modificar (char u[80])
+{
+ float a,e,n,TAM=0;
+ char autor[31],form[31],tit[31],numero[31],r[80],x[80];
+ int b,y;
+ FILE *f1,*f2;
+ clrscr ();
+ e=rest1 (u,73);
+ do
+ {
+  f1=fopen (u,"rb");
+  f2=fopen ("m.x","wb");
+  do
+  {
+   printf ("Ficha a modificar ? ");
+   scanf ("%f",&a);
+  }
+  while ((a>e)||(a<=0));
+  for (n=1;n<=e;n++)
+  {
+   fgets (autor,31,f1);
+   fgets (tit,31,f1);
+   fgets (form,9,f1);
+   fgets (numero,6,f1);
+   if (n==a)
+   {
+    printf ("Eliminar ficha ? ");
+    scanf ("%d",&y);
+    if (y!=0)
+    {
+     autor[29]='0';
+     sound (3000);
+     delay (1000);
+     nosound();
+    }
+    else
+    {
+     autor[31]=meter2(TAM,a,u,"Autor",autor,6,29);
+     tit[31]=meter2(TAM,a,u,"T¡tulo",tit,7,29);
+     form[31]=meter2(TAM,a,u,"Formato",form,8,7);
+     numero[31]=meter2(TAM,a,u,"N£mero",numero,7,5);
+     sound (100);
+     delay (1000);
+     nosound();
+    }
+   }
+   fputs (autor,f2);
+   fputs (tit,f2);
+   fputs (form,f2);
+   fputs (numero,f2);
+  }
+  fclose (f1);
+  fclose (f2);
+  cop ("m.x",u);
+  remove ("m.x");
+  printf ("Ficha modificada.\n\a");
+  printf ("M s modificaciones ? ");
+  scanf ("%d",&b);
+ }
+ while ((b!=0)&&(e!=0));
+ cop (u,"m.x");
+ f1=fopen (u,"wb");
+ f2=fopen ("m.x","rb");
+ do
+ {
+  fread (&x,73,1,f2);
+  if ((feof(f2)==0)&&(x[29]!='0')) 
+  {
+   fwrite (&x,73,1,f1);
+  }
+ }
+ while (feof(f2)==0);
+ fclose (f1);
+ fclose (f2);
+ remove ("m.x");
+ clrscr();
+}
+void mostrar (char r[80],char rd[80],int a)
+{
+ FILE *f1;
+ char ficha[73];
+ int i,j,k,y=1;
+ float x=1,d,h;
+ clrscr();
+ d=rest1 (rd,77);
+ fflush (stdin);
+ f1=fopen (rd,"rb");
+ if (a==6)
+ {
+  printf ("B£squeda en fichero ");
+ }
+ printf ("%s %04d\n",r,y);
+ printf ("Ficha Autor                         T¡tulo                        Formato N£mero");
+ i=2;
+ for (h=1;h<=d;h++)
+ {
+  fgets (ficha,74,f1);
+  fread (&x,4,1,f1);
+  printf ("%05.0f ",x);
+  puts (ficha);
+  x++;
+  i++;
+  if (i==24)
+  {
+   printf ("Pulsa una tecla para seguir.");
+   getch();
+   clrscr();
+   y++;
+   if (h!=d)
+   {
+    if (a==6)
+    {
+     printf ("B£squeda en fichero ");
+    }
+    printf ("%s %04d\n",r,y);
+    printf ("Ficha Autor                         T¡tulo                        Formato N£mero");
+    i=2;
+   }
+  }
+ }
+ fclose (f1);
+ puts ("Pulsa una tecla.");
+ getch();
+ clrscr();
+}
+void imprimir (char r[80],FILE *f2,int a)
+{
+ FILE *f1;
+ char ficha[73],r2[80],l,f='£',g='¡',fichero[80];
+ int i,x2,j;
+ float x,b=0;
+ x=1;
+ x2=1;
+ fflush (stdin);
+ strcpy (r2,r);
+ if (a!=6)
+ {
+  strcat (r,".2");
+ }
+ else
+ {
+  strcat (r,".3"); 
+ }
+ f1=fopen (r,"rb");
+ if (a!=6)
+ {
+  printf ("\n");
+ }
+ if (a!=6)
+ {
+  do
+  {
+   printf ("Fichero cargado:%s.\n",r2);
+   printf ("Encabezado:");
+   fflush (stdin);
+   gets (fichero);
+   fflush (stdin);
+  }
+  while (adm(fichero)==0);
+ }
+ else
+ {
+  strcpy (fichero,"B£squeda en fichero ");
+  strcat (fichero,r2);
+ }
+ for (j=0;j<=strlen(fichero)-1;j++)
+ {
+  fichero[j]=cor(fichero[j]);
+ }
+ if (a!=6)
+ {
+  clrscr();
+ }
+ fprintf (f2,"  %s %04d\n",fichero,x2);
+ fprintf (f2,"  Ficha Autor                         T%ctulo                        Formato N%cmero\n",cor(g),cor(f));
+ i=2;
+ do
+ {
+  if (i==60)
+  {
+   x2++;
+   fprintf (f2,"\n\n\n\n\n\n\n\n\n\n\n");
+   fprintf (f2,"  %s %04d\n",fichero,x2);
+   fprintf (f2,"  Ficha Autor                         T%ctulo                        Formato N%cmero\n",cor(g),cor(f));
+   i=2;
+  }
+  fread (&ficha,73,1,f1);
+  fread (&x,4,1,f1);
+  if (feof(f1)==0)
+  {
+   fprintf (f2,"  %05.0f ",x);
+   for (j=0;j<=72;j++)
+   {
+    fprintf (f2,"%c",cor(ficha[j]));
+   }
+   fprintf (f2,"\n");
+   i++;
+   b++;
+  }
+ }
+ while (feof(f1)==0);
+ for (x=i;x<=59;x++)
+ {
+  fprintf (f2,"\n");
+ }
+ fprintf (f2,"\n\n\n\n\n\n\n\n\n\n\n");
+ if (a!=6)
+ {
+  clrscr();
+ }
+ fclose (f1);
+ if (a!=6)
+ {
+  printf ("Archivo '%s' impreso.\n",r2);
+ }
+}
+float buscar (char r[80],char autor[80],char titulo[80],char formato[80],char numero[5])
+{
+ FILE *f1,*f2;
+ int m;
+ char autor2[80],titulo2[80],formato2[80],numero2[5],numero3[5],r2[80],r3[80];
+ float y,x,k=0,fg;
+ y=0;
+ strcpy (r2,r);
+ strcat (r2,".3");
+ strcpy (r3,r);
+ strcat (r3,".2");
+ fg=rest1 (r3,77);
+ f1=fopen (r2,"wb");
+ f2=fopen (r3,"rb");
+ if (strlen(numero)!=5)
+ {
+  strcpy(numero3,"0");
+  for (m=1;m<=4-strlen(numero);m++)
+  {
+   strcat (numero3,"0");
+  }
+  strcat (numero3,numero);
+  strcpy (numero,numero3);
+ }
+ do
+ {
+  fgets (autor2,31,f2);
+  fgets (titulo2,31,f2);
+  fgets (formato2,9,f2);
+  fgets (numero2,6,f2);
+  fread (&x,4,1,f2);
+  k++;
+  if ((feof(f1)==0)&&(k<=fg))
+  {
+   if (strcmp(autor,"")==0)
+   {
+    m=1;
+   }
+   else
+   {
+    m=dentro(autor2,autor);
+   }
+   if (m==1)
+   {
+    if (strcmp(titulo,"")==0)
+    {
+     m=1;
+    }
+    else
+    {
+     m=dentro(titulo2,titulo);
+    }
+   }
+   if (m==1)
+   {
+    if (strcmp(formato,"")==0)
+    {
+     m=1;
+    }
+    else
+    {
+     m=dentro(formato2,formato);
+    }
+   }
+   if (m==1)
+   {
+    if (strcmp(numero,"")==0)
+    {
+     m=1;
+    }
+    else
+    {
+     if (strcmp(numero2,numero)==0)
+     {
+      m=1;
+     }
+     else
+     {
+      m=0;
+     }
+    }
+   }
+   if ((m==1)&&(k<=fg))
+   {
+    m=0;
+    fwrite (&autor2,30,1,f1);
+    fwrite (&titulo2,30,1,f1);
+    fwrite (&formato2,8,1,f1);
+    fwrite (&numero2,5,1,f1);
+    fwrite (&x,4,1,f1);
+    y++;
+   }
+  }
+ }
+ while (feof(f2)==0);
+ fclose (f1);
+ fclose (f2);
+ return y;
+}
+void buscar2 (char r[80],char autor[80],char formato[80])
+{
+ FILE *f1,*f2;
+ int m;
+ char autor2[80],titulo2[80],formato2[80],numero2[5];
+ f1=fopen (autor,"wb");
+ f2=fopen (r,"rb");
+ do
+ {
+  fgets (autor2,31,f2);
+  fgets (titulo2,31,f2);
+  fgets (formato2,9,f2);
+  fgets (numero2,6,f2);
+  if (feof(f1)==0)
+  {
+   m=dentro(formato2,formato);
+   if (m==0)
+   {
+    fwrite (&autor2,30,1,f1);
+    fwrite (&titulo2,30,1,f1);
+    fwrite (&formato2,8,1,f1);
+    fwrite (&numero2,5,1,f1);
+   }
+  }
+ }
+ while (feof(f2)==0);
+ fclose (f1);
+ fclose (f2);
+}
+void f (int a)
+{
+ struct ffblk ffblk;
+ int done,i,y=1,z=0;
+ char r[80],autor[80],titulo[80],formato[80],numero[5];
+ int t=0,b=1;
+ float x,m=0;
+ FILE *f2;
+ clrscr();
+ z=ng();
+ if (a!=8)
+ {
+  if (a!=2)
+  {
+   printf ("Orden num‚rico ? ");
+   scanf ("%d",&t);
+  }
+  done = findfirst("*",&ffblk,0);
+  while (!done)
+  {
+   for (i=1;i<=60;i++)
+   {
+    printf (" ");
+   }
+   printf ("\rOrdenando fichero %s (%d de %d) ...\r",ffblk.ff_name,y,z);
+   orden (ffblk.ff_name);
+   strcpy (r,ffblk.ff_name);
+   strcat (r,".2");
+   cop (ffblk.ff_name,r);
+   if (t!=0)
+   {
+    ordena (ffblk.ff_name);
+   }
+   if (a!=2)
+   {
+    fichas (ffblk.ff_name);
+   }
+   y++;
+   done = findnext(&ffblk);
+   delay (1000);
+  }
+ }
+ if (a==3)
+ {
+  clrscr ();
+  f2=fopen ("fichas.WRI","w");
+  done = findfirst("*",&ffblk,0);
+  while (!done)
+  {
+   imprimir (ffblk.ff_name,f2,a);
+   m=m++;
+   strcpy (r,ffblk.ff_name);
+   strcat (r,".2");
+   remove (r);
+   done = findnext(&ffblk);
+  }
+  fclose (f2);
+  printf ("Archivo");
+  if (m!=1)
+  {
+   printf ("s");
+  }
+  printf (" impreso");
+  if (m!=1)
+  {
+   printf ("s");
+  }
+  printf (" en fichero 'fichas.wri'.\n");
+  delay (3000);
+  clrscr();
+ }
+ if (a==5)
+ {
+  f2=fopen ("listado.WRI","w");
+  i=0;
+  do
+  {
+   do
+   {
+    clrscr ();
+    printf ("Escoge fichero a listar:\n");
+    dir ();
+    fflush (stdin);
+    gets (r);
+   }
+   while (esta (r)==0);
+   strcpy (autor,r);
+   strcat (autor,".2");
+   mostrar (r,autor,a);
+   printf ("Imprimir ? ");
+   scanf ("%d",&t);
+   if (t!=0)
+   {
+    i++;
+    imprimir (r,f2,a);
+   }
+   printf ("M s ficheros ? ");
+   scanf ("%d",&b);
+   remove (autor);
+  }
+  while (b!=0);
+  fclose (f2);
+  if (i!=0)
+  {
+   puts ("Listado impreso en fichero 'listado.wri'.");
+   delay (3000);
+  }
+  else
+  {
+   remove ("listado.wri");
+  }
+  clrscr();
+ }
+ if (a==2)
+ {
+  do
+  {
+   do
+   {
+    clrscr ();
+    printf ("Escoge fichero de trabajo:\n");
+    dir ();
+    fflush (stdin);
+    gets (r);
+   }
+   while (esta (r)==0);
+   modificar (r);
+   strcat (r,".2");
+   remove (r);
+   printf ("Bajas en m s ficheros ? ");
+   scanf ("%d",&b);
+  }
+  while (b!=0);
+  delay (3000);
+  clrscr();
+ }
+ if (a==6)
+ {
+  clrscr();
+  t=0;
+  printf ("\a");
+  do
+  {
+   printf ("      ");
+   carlos (29);
+   printf ("Autor:");
+   fflush (stdin);
+   gets (autor);
+  }
+  while (strlen (autor)>29);
+  do
+  {
+   printf ("       ");
+   carlos (29);
+   printf ("T¡tulo:");
+   fflush (stdin);
+   gets (titulo);
+  }
+  while (strlen (titulo)>29);
+  do
+  {
+   printf ("        ");
+   carlos (7);
+   printf ("Formato:");
+   fflush (stdin);
+   gets (formato);
+  }
+  while (strlen (formato)>7);
+  do
+  {
+   printf ("       ");
+   carlos (5);
+   printf ("N£mero:");
+   fflush (stdin);
+   gets (numero);
+  }
+  while (strlen (numero)>5);
+  clrscr ();
+  f2=fopen ("busqueda.WRI","w");
+  done = findfirst("*",&ffblk,0);
+  while (!done)
+  {
+   fflush (stdin);
+   x=buscar (ffblk.ff_name,autor,titulo,formato,numero);
+   m=m+x;
+   printf ("%.0f registro",x);
+   if (x!=1)
+   {
+    printf ("s");
+   }
+   printf (" coincidente");
+   if (x!=1)
+   {
+    printf ("s");
+   }
+   printf (" en fichero %s.\n",ffblk.ff_name);
+   delay (3000);
+   if (x!=0)
+   {
+    strcpy (r,ffblk.ff_name);
+    strcat (r,".3");
+    mostrar (ffblk.ff_name,r,a);
+    printf ("Imprimir ? ");
+    scanf ("%d",&b);
+    if (b!=0)
+    {
+     t++;
+     imprimir (ffblk.ff_name,f2,a);
+    }
+   }
+   strcpy (r,ffblk.ff_name);
+   strcat (r,".3");
+   remove (r);
+   done = findnext(&ffblk);
+  }
+  fclose (f2);
+  clrscr ();
+  if (m!=0)
+  {
+   printf ("Hay %.0f registro",m);
+   if (m!=1)
+   {
+    printf ("s");
+   }
+   printf (" coincidente");
+   if (m!=1)
+   {
+    printf ("s");
+   }
+   printf (".\n");
+   delay (3000);
+  }
+  if ((t!=0)&&(m!=0))
+  {
+   puts ("B£squeda impresa en fichero 'busqueda.wri'.");
+   delay (3000);
+   clrscr();
+  }
+  else
+  {
+   remove ("busqueda.WRI");
+   clrscr();
+  }
+ }
+ if (a==8)
+ {
+  clrscr();
+  t=1;
+  printf ("\a");
+  do
+  {
+   printf ("        ");
+   carlos (7);
+   printf ("Formato:");
+   fflush (stdin);
+   gets (formato);
+  }
+  while (strlen (formato)>7);
+  clrscr ();
+  do
+  {
+   do
+   {
+    clrscr ();
+    printf ("Escoge fichero de trabajo:\n");
+    dir ();
+    fflush (stdin);
+    gets (r);
+   }
+   while (esta (r)==0);
+   strcpy (autor,r);
+   strcat (r,".3");
+   buscar2 (autor,r,formato);
+   cop (r,autor);
+   remove (r);
+   delay (3000);
+   printf ("Formato de baja en otros ficheros ? ");
+   scanf ("%d",&t);
+  }
+  while (t!=0);
+ }
+ done = findfirst("*.2",&ffblk,0);
+ while (!done)
+ {
+  remove (ffblk.ff_name);
+  done = findnext(&ffblk);
+ }
+ clrscr ();
+}
+void copias (void)
+{
+ struct ffblk ffblk;
+ int done,done2,b=0,l=1;
+ char o[80],k[80],p[80];
+ float r;
+ do
+ {
+  printf ("Destino para la copia de seguridad: ");
+  fflush(stdin);
+  gets (o);
+  fflush(stdin);
+ }
+ while ((strcmp(o,"A")==0)||(dentro(o,":")==1));
+ strcpy (k,o);
+ strcat (k,":");
+ strcpy (p,k);
+ strcat (k,"*");
+ done = findfirst(k,&ffblk,0);
+ while (!done)
+ {
+  strcat (p,ffblk.ff_name);
+  done2 = creatnew(o,0);
+  if (done2==-1)
+  {
+   b=1;
+  }
+  done = findnext(&ffblk);
+  strcpy (p,o);
+  strcat (p,":");
+ }
+ if (b==1)
+ {
+  puts ("Hay archivos coincidentes.");
+  printf ("Sobreescribir ? ");
+  scanf ("%d",&l);
+ }
+ if (l!=0)
+ {
+  done = findfirst("*",&ffblk,0);
+  while (!done)
+  {
+   strcpy (k,o);
+   strcat (k,":");
+   strcat (k,ffblk.ff_name);
+   cop (ffblk.ff_name,k);
+   done = findnext(&ffblk);
+  }
+  printf ("Copia realizada.\n");
+  delay (6000);
+  clrscr ();
+ }
+ else
+ {
+  puts ("Error.Coincidencias en archivos de seguridad.");
+  puts ("Elige otra unidad para la copia.");
+  delay (3000);
+  clrscr();
+ }
+}
+void main (void)
+{
+ int a;
+ float n;
+ verif();
+ delay (1000);
+ fflush (stdin);
+ do
+ {
+  clrscr ();
+  n=rest();
+  printf ("0-Salir.\a\n");
+  printf ("1-Meter.\n");
+  printf ("2-Modificar.\n");
+  printf ("3-Imprimir.\n");
+  printf ("4-Informaci¢n.\n");
+  printf ("5-Listado.\n");
+  printf ("6-Buscar.\n");
+  printf ("7-Copia de seguridad.\n");
+  printf ("8-Baja de formato.\n");
+  scanf ("%d",&a);
+  if (a!=0)
+  {
+   printf ("Comprobaci¢n de la opci¢n:\n");
+   scanf ("%d",&a);
+  }
+  clrscr();
+  if (a==7)
+  {
+   copias();
+  }
+  if (a==1)
+  {
+   meter (n);
+  }
+  if ((a==3)&&(n!=0))
+  {
+   f (a);
+  }
+  if ((a==2)&&(n!=0))
+  {
+   f (a);
+  }
+  if ((a==5)&&(n!=0))
+  {
+   f (a);
+  }
+  if ((a==6)&&(n!=0))
+  {
+   f (a);
+  }
+  if ((a==8)&&(n!=0))
+  {
+   f (a);
+  }
+  if (a==4)
+  {
+   info (n);
+  }
+ }
+ while (a!=0);
+ clrscr();
+ for (a=1;a<=3;a++)
+ {
+  printf ("\n\n\n\n\n\n\n\n\n\n");
+  printf ("                             Gracias por su confianza\r");
+  delay (3000);
+  clrscr();
+  delay (2000);
+ }
+ printf ("\a");
+}
+ 
+  
+  
+    

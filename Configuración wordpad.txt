@@ -1,0 +1,7 @@
+Letra:Curier New - 10
+Hoja:
+Margen izquierdo:15mm
+Margen derecho:15mm
+Margen superior:25mm
+Margen inferior:5mm
+A4
